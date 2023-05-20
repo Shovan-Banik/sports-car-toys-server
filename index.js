@@ -30,7 +30,7 @@ async function run() {
     const toyCollection=client.db('sportsCarToy').collection('toys');
 
     app.get('/toys', async(req,res)=>{
-        const cursor=toyCollection.find();
+        const cursor=toyCollection.find().limit(20);
         const result=await cursor.toArray();
         res.send(result);
     })
@@ -49,6 +49,15 @@ async function run() {
         const filter={_id: new ObjectId(id)}
         const result=await toyCollection.findOne(filter);
         res.send(result);
+    })
+
+    app.get('/myToys/:email',async(req,res)=>{
+        const email=req.params.email;
+        const query={sellerEmail:email};
+        const cursor=toyCollection.find(query);
+        const result=await cursor.toArray();
+        res.send(result);
+       
     })
 
     app.post('/addToy',async(req,res)=>{
